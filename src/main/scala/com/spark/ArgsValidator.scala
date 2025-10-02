@@ -25,8 +25,13 @@ object ArgsValidator {
     val commandLine: CommandLine = commandLineParser.parse(allOptions, args)
     input = commandLine.getOptionValue("input")
     println("Source file: " + input)
-    output = commandLine.getOptionValue("output")
-    println("Target path" + output)
+    output = if (commandLine.getOptionValue("output").endsWith("/"))
+    {
+      commandLine.getOptionValue("output")
+    }
+    else {commandLine.getOptionValue("output").concat("/")}
+
+    println("Target path: " + output)
   }
 
 }
