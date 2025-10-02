@@ -4,15 +4,16 @@ import org.apache.spark.SparkContext
 
 import org.apache.spark.sql.{DataFrame, Row, SaveMode, SparkSession}
 import com.spark.ArgsValidator
-object Main extends Serializable {
+object Main {
 
   def main (arg:Array[String]): Unit = {
 
     ArgsValidator.checkArgs(arg)
-    val input = ArgsValidator.input
-    val output = ArgsValidator.output
+    val input = ArgsValidator.input //"gs://gcs-dataproc-files/input/"
+    val output = ArgsValidator.output //"gs://gcs-dataproc-files/output/processed_data/"
 
   val spark = SparkSession.builder()
+    //commentare l'opzione del master prima di eseguire la build
     .master("local[1]")
     .appName("Test_B19")
     .getOrCreate()
@@ -27,10 +28,16 @@ object Main extends Serializable {
 
     val ruvReader = new RuvReader(spark, sc, input)
 
-    val cleanData: (DataFrame, String) = ruvReader.createDF()
+    //creazione del DF finale con 1 solo file
+    //val cleanData: DataFrame = ruvReader.createDF(ruvReader.readRUV("RDLm_BARK_2025_03_12_0000.ruv"))//ruvReader.createDFTotal()
 
-    //scrittura del DataFrame sul file CSV
-   cleanData._1.write.mode(SaveMode.Overwrite).option("Header","True").csv(output + cleanData._2)
+    //creazione del DF finale con più file
+    val cleanData: (DataFrame, String) = ruvReader.createDFTotal()
+
+    //scrittura del DataFrame sul file CSV (singolo file)
+   //cleanData.write.mode(SaveMode.Overwrite).option("Header","True").csv(output + "BARK")
+    //scrittura del DataFrame sul file CSV (più file)
+    cleanData._1.write.mode(SaveMode.Overwrite).option("Header","True").csv(output + cleanData._2)
 
 }
 }
