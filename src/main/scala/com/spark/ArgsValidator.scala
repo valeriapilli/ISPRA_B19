@@ -1,6 +1,6 @@
 package com.spark
 
-import org.apache.commons.cli.{BasicParser, CommandLine, CommandLineParser, HelpFormatter, Option, Options, ParseException}
+import org.apache.commons.cli._
 
 object ArgsValidator {
 

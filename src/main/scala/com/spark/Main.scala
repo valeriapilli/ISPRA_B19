@@ -3,7 +3,7 @@ package com.spark
 import org.apache.spark.SparkContext
 
 import org.apache.spark.sql.{DataFrame, Row, SaveMode, SparkSession}
-import com.spark.ArgsValidator
+
 object Main {
 
   def main (arg:Array[String]): Unit = {
